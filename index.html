@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Class Representative Elections 2025</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="navbar" class="hidden">
+        <div class="container">
+            <div class="nav-content">
+                <h3>Election Portal</h3>
+                <div class="nav-links">
+                    <button class="btn btn--outline" onclick="showDashboard()">Dashboard</button>
+                    <button class="btn btn--outline" onclick="showVoting()">Vote</button>
+                    <button id="adminBtn" class="btn btn--outline hidden" onclick="showAdmin()">Admin</button>
+                    <button class="btn btn--secondary" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Landing Page -->
+    <div id="landingPage" class="page active">
+        <div class="container">
+            <div class="landing-content">
+                <div class="hero-section">
+                    <h1>College Class Representative Elections 2025</h1>
+                    <p>Your voice matters. Cast your vote and shape your academic future.</p>
+                    <div class="election-status">
+                        <span class="status status--success">Election Active</span>
+                        <p>Voting ends on September 5, 2025 at 5:00 PM</p>
+                    </div>
+                </div>
+                <div class="auth-section">
+                    <div class="auth-buttons">
+                        <button class="btn btn--primary btn--lg" onclick="showLogin()">Login to Vote</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Form -->
+    <div id="loginPage" class="page">
+        <div class="container">
+            <div class="auth-form-container">
+                <div class="card">
+                    <div class="card__body">
+                        <h2>Voter Login</h2>
+                        <form id="loginForm">
+                            <div class="form-group">
+                                <label class="form-label">Student ID</label>
+                                <input type="text" class="form-control" id="loginId" placeholder="Enter your authorized student ID" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Password</label>
+                                <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password" required>
+                            </div>
+                            <button type="submit" class="btn btn--primary btn--full-width">Login</button>
+                        </form>
+                        <div class="form-footer">
+                            <button class="btn btn--outline" onclick="showLanding()">Back</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboardPage" class="page">
+        <div class="container">
+            <div class="dashboard-header">
+                <h2>Welcome, <span id="userName"></span>!</h2>
+                <p>Class: <span id="userClass"></span> | Department: <span id="userDepartment"></span></p>
+            </div>
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card__body">
+                        <h3>Voting Status</h3>
+                        <div id="votingStatus">
+                            <span class="status status--warning">Not Voted</span>
+                        </div>
+                        <p id="votingStatusText">You haven't cast your vote yet. Click below to vote!</p>
+                        <button id="voteButton" class="btn btn--primary" onclick="showVoting()">Cast Your Vote</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card__body">
+                        <h3>Election Information</h3>
+                        <div class="election-info">
+                            <p><strong>Title:</strong> College Class Representative Elections 2025</p>
+                            <p><strong>Status:</strong> <span class="status status--success">Active</span></p>
+                            <p><strong>Ends:</strong> September 5, 2025 at 5:00 PM</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card__body">
+                        <h3>Your Voting Record</h3>
+                        <div id="voterRecord">
+                            <p>Your authorized status is confirmed.</p>
+                            <p id="votingTimestamp" class="hidden">Voted on: <span></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Voting Page -->
+    <div id="votingPage" class="page">
+        <div class="container">
+            <div class="voting-header">
+                <h2>Cast Your Vote</h2>
+                <p>Select your preferred candidates for each position</p>
+            </div>
+            <div id="votingPositions"></div>
+            <div class="voting-footer">
+                <button class="btn btn--outline" onclick="showDashboard()">Cancel</button>
+                <button id="submitVoteBtn" class="btn btn--primary btn--lg" onclick="submitVotes()">Submit Vote</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Page -->
+    <div id="adminPage" class="page">
+        <div class="container">
+            <div class="admin-header">
+                <h2>Admin Dashboard</h2>
+                <p>Manage elections, authorized voters, and monitor live results</p>
+            </div>
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="showAdminTab('voters')">Authorized Voters</button>
+                <button class="tab-btn" onclick="showAdminTab('candidates')">Candidates</button>
+                <button class="tab-btn" onclick="showAdminTab('results')">Live Results</button>
+                <button class="tab-btn" onclick="showAdminTab('activity')">Voting Activity</button>
+            </div>
+            <div id="adminContent">
+                <div id="adminVoters" class="admin-tab active">
+                    <div class="admin-section-header">
+                        <h3>Manage Authorized Voters</h3>
+                        <button class="btn btn--primary" onclick="showAddVoterModal()">Add Voter ID</button>
+                    </div>
+                    <div class="voter-stats">
+                        <div class="stat-grid">
+                            <div class="stat-card">
+                                <span class="stat-number" id="totalAuthorized">0</span>
+                                <span class="stat-label">Authorized</span>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-number" id="totalVoted">0</span>
+                                <span class="stat-label">Voted</span>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-number" id="totalPending">0</span>
+                                <span class="stat-label">Pending</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="votersList"></div>
+                </div>
+
+                <div id="adminCandidates" class="admin-tab">
+                    <div class="admin-section-header">
+                        <h3>Manage Candidates</h3>
+                        <button class="btn btn--primary" onclick="showAddCandidateModal()">Add Candidate</button>
+                    </div>
+                    <div id="candidatesList"></div>
+                </div>
+
+                <div id="adminResults" class="admin-tab">
+                    <h3>Live Election Results</h3>
+                    <div id="liveResultsContent"></div>
+                </div>
+
+                <div id="adminActivity" class="admin-tab">
+                    <h3>Voting Activity Log</h3>
+                    <div class="activity-summary">
+                        <p>Total votes cast: <span id="totalVotesCast">0</span></p>
+                        <p>Last activity: <span id="lastActivity">No votes cast yet</span></p>
+                    </div>
+                    <div id="activityLog"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Voter Modal -->
+    <div id="addVoterModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Authorized Voter</h3>
+                <button class="close-btn" onclick="closeAddVoterModal()">&times;</button>
+            </div>
+            <form id="addVoterForm">
+                <div class="form-group">
+                    <label class="form-label">Student ID</label>
+                    <input type="text" class="form-control" id="voterIdInput" placeholder="e.g., CS2023001" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn--outline" onclick="closeAddVoterModal()">Cancel</button>
+                    <button type="submit" class="btn btn--primary">Add Voter ID</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Candidate Modal -->
+    <div id="addCandidateModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Candidate</h3>
+                <button class="close-btn" onclick="closeAddCandidateModal()">&times;</button>
+            </div>
+            <form id="addCandidateForm">
+                <div class="form-group">
+                    <label class="form-label">Name</label>
+                    <input type="text" class="form-control" id="candidateName" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Class</label>
+                    <select class="form-control" id="candidateClass" required>
+                        <option value="">Select class</option>
+                        <option value="CS">CS</option>
+                        <option value="EE">EE</option>
+                        <option value="ME">ME</option>
+                        <option value="CE">CE</option>
+                        <option value="IT">IT</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Position</label>
+                    <select class="form-control" id="candidatePosition" required>
+                        <option value="">Select position</option>
+                        <option value="Class Representative">Class Representative</option>
+                        <option value="Vice Representative">Vice Representative</option>
+                        <option value="Secretary">Secretary</option>
+                        <option value="Treasurer">Treasurer</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" id="candidateDescription" rows="3" required></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn--outline" onclick="closeAddCandidateModal()">Cancel</button>
+                    <button type="submit" class="btn btn--primary">Add Candidate</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification hidden">
+        <div class="notification-content">
+            <span id="notificationText"></span>
+            <button onclick="hideNotification()">&times;</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
